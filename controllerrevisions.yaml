@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+data:
+  spec:
+    containers:
+    - image: iregistry.baidu-int.com/jarvis-sidecar/moonlight:2022.11.09.5
+      imagePullPolicy: IfNotPresent
+      lifecycle:
+        postStart:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - /home/work/moonlight/bin/wait_ready
+      livenessProbe:
+        exec:
+          command:
+          - /bin/bash
+          - -c
+          - /home/work/moonlight/bin/noah_control status
+        failureThreshold: 3
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 30
+      name: moonlight
+      podInjectPolicy: BeforeAppContainer
+      readinessProbe:
+        exec:
+          command:
+          - /bin/bash
+          - -c
+          - /home/work/moonlight/bin/noah_control status
+        failureThreshold: 3
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 30
+      resources:
+        limits:
+          cpu: "1"
+          eks.baidu-int.com/cpu: "1"
+          ephemeral-storage: 2Gi
+          memory: 200Mi
+        requests:
+          cpu: "1"
+          eks.baidu-int.com/cpu: "1"
+          ephemeral-storage: 2Gi
+          memory: 200Mi
+      shareVolumePolicy:
+        type: enabled
+      startupProbe:
+        exec:
+          command:
+          - /bin/bash
+          - -c
+          - /home/work/moonlight/bin/noah_control status
+        failureThreshold: 30
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 30
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      transferEnv:
+      - envName: EM_PRODUCT_LINE
+        sourceContainerName: main
+      - envName: EM_APP
+        sourceContainerName: main
+      - envName: EM_PLATFORM
+        sourceContainerName: main
+      - envName: EM_LOGIC_IDC
+        sourceContainerName: main
+      - envName: EM_ENV_TYPE
+        sourceContainerName: main
+      - envName: EM_PAAS_TYPE
+        sourceContainerName: main
+      - envName: EM_IP
+        sourceContainerName: main
+      - envName: HOST_ADDRESS
+        sourceContainerName: main
+      - envName: EM_INSTANCE_ID
+        sourceContainerName: main
+      - envName: EM_PORT
+        sourceContainerName: main
+      - envName: EM_APP_TYPE
+        sourceContainerName: main
+      upgradeStrategy:
+        upgradeType: ColdUpgrade
+    imagePullSecrets: null
+    initContainers: null
+    patchPodMetadata: null
+    volumes: null
+kind: ControllerRevision
+metadata:
+  annotations:
+    app.oam.dev/last-applied-configuration: '{"apiVersion":"apps.kruise.io/v1alpha1","kind":"SidecarSet","metadata":{"annotations":{"jarvis/em_sidecar":"moonlight","jarvis/em_sidecar_version":"2022.11.09.5","oam.dev/kubevela-version":"v1.3.6"},"labels":{"app.oam.dev/app-revision-hash":"59ff51a33080fb57","app.oam.dev/appRevision":"moonlight-offline-v7","app.oam.dev/cluster":"ni-yq02-test","app.oam.dev/component":"moonlight-offline","app.oam.dev/name":"moonlight-offline","app.oam.dev/namespace":"jarvis-system","app.oam.dev/resourceType":"WORKLOAD","app.oam.dev/revision":"moonlight-offline-v7","oam.dev/render-hash":"571c3f32b288c1e5","workload.oam.dev/type":"jarvis-sidecar-component"},"name":"moonlight-offline","namespace":"jarvis-system"},"spec":{"containers":[{"env":[],"image":"iregistry.baidu-int.com/jarvis-sidecar/moonlight:2022.11.09.5","lifecycle":{"postStart":{"exec":{"command":["/bin/bash","-c","/home/work/moonlight/bin/wait_ready"]}}},"livenessProbe":{"exec":{"command":["/bin/bash","-c","/home/work/moonlight/bin/noah_control
+      status"]},"failureThreshold":3,"initialDelaySeconds":0,"periodSeconds":10,"timeoutSeconds":30},"name":"moonlight","podInjectPolicy":"BeforeAppContainer","ports":[],"readinessProbe":{"exec":{"command":["/bin/bash","-c","/home/work/moonlight/bin/noah_control
+      status"]},"failureThreshold":3,"initialDelaySeconds":0,"periodSeconds":10,"timeoutSeconds":30},"resources":{"limits":{"cpu":"1","eks.baidu-int.com/cpu":"1","ephemeral-storage":"2048Mi","memory":"200Mi"},"requests":{"cpu":"1","eks.baidu-int.com/cpu":"1","ephemeral-storage":"2048Mi","memory":"200Mi"}},"shareVolumePolicy":{"type":"enabled"},"startupProbe":{"exec":{"command":["/bin/bash","-c","/home/work/moonlight/bin/noah_control
+      status"]},"failureThreshold":30,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":30},"transferEnv":[{"envName":"EM_PRODUCT_LINE","sourceContainerName":"main"},{"envName":"EM_APP","sourceContainerName":"main"},{"envName":"EM_PLATFORM","sourceContainerName":"main"},{"envName":"EM_LOGIC_IDC","sourceContainerName":"main"},{"envName":"EM_ENV_TYPE","sourceContainerName":"main"},{"envName":"EM_PAAS_TYPE","sourceContainerName":"main"},{"envName":"EM_IP","sourceContainerName":"main"},{"envName":"HOST_ADDRESS","sourceContainerName":"main"},{"envName":"EM_INSTANCE_ID","sourceContainerName":"main"},{"envName":"EM_PORT","sourceContainerName":"main"},{"envName":"EM_APP_TYPE","sourceContainerName":"main"}]}],"selector":{"matchLabels":{"em_env_type":"OFFLINE","em_sidecar_moonlight_enabled":"true"}},"updateStrategy":{"type":"RollingUpdate"}}}'
+    app.oam.dev/last-applied-time: "2022-11-10T10:23:08Z"
+    jarvis/em_sidecar: moonlight
+    jarvis/em_sidecar_version: 2022.11.09.5
+    kruise.io/sidecarset-hash: c56d49b9b2c9xcx5x96cv9x5vf944xdc6c4vd2z4426z6765fc49x4w987bw28xb
+    kruise.io/sidecarset-hash-without-image: 47842595z9884f274944x5zz4w6xzx975wvcw4c5b54dvxzf296dw5xdzf4486b2
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps.kruise.io/v1alpha1","kind":"SidecarSet","metadata":{"annotations":{"app.oam.dev/last-applied-configuration":"{\"apiVersion\":\"apps.kruise.io/v1alpha1\",\"kind\":\"SidecarSet\",\"metadata\":{\"annotations\":{\"jarvis/em_sidecar\":\"moonlight\",\"jarvis/em_sidecar_version\":\"2022.11.09.5\",\"oam.dev/kubevela-version\":\"v1.3.6\"},\"labels\":{\"app.oam.dev/app-revision-hash\":\"59ff51a33080fb57\",\"app.oam.dev/appRevision\":\"moonlight-offline-v7\",\"app.oam.dev/cluster\":\"ni-yq02-test\",\"app.oam.dev/component\":\"moonlight-offline\",\"app.oam.dev/name\":\"moonlight-offline\",\"app.oam.dev/namespace\":\"jarvis-system\",\"app.oam.dev/resourceType\":\"WORKLOAD\",\"app.oam.dev/revision\":\"moonlight-offline-v7\",\"oam.dev/render-hash\":\"571c3f32b288c1e5\",\"workload.oam.dev/type\":\"jarvis-sidecar-component\"},\"name\":\"moonlight-offline\",\"namespace\":\"jarvis-system\"},\"spec\":{\"containers\":[{\"env\":[],\"image\":\"iregistry.baidu-int.com/jarvis-sidecar/moonlight:2022.11.09.5\",\"lifecycle\":{\"postStart\":{\"exec\":{\"command\":[\"/bin/bash\",\"-c\",\"/home/work/moonlight/bin/wait_ready\"]}}},\"livenessProbe\":{\"exec\":{\"command\":[\"/bin/bash\",\"-c\",\"/home/work/moonlight/bin/noah_control status\"]},\"failureThreshold\":3,\"initialDelaySeconds\":0,\"periodSeconds\":10,\"timeoutSeconds\":30},\"name\":\"moonlight\",\"podInjectPolicy\":\"BeforeAppContainer\",\"ports\":[],\"readinessProbe\":{\"exec\":{\"command\":[\"/bin/bash\",\"-c\",\"/home/work/moonlight/bin/noah_control status\"]},\"failureThreshold\":3,\"initialDelaySeconds\":0,\"periodSeconds\":10,\"timeoutSeconds\":30},\"resources\":{\"limits\":{\"cpu\":\"1\",\"eks.baidu-int.com/cpu\":\"1\",\"ephemeral-storage\":\"2048Mi\",\"memory\":\"200Mi\"},\"requests\":{\"cpu\":\"1\",\"eks.baidu-int.com/cpu\":\"1\",\"ephemeral-storage\":\"2048Mi\",\"memory\":\"200Mi\"}},\"shareVolumePolicy\":{\"type\":\"enabled\"},\"startupProbe\":{\"exec\":{\"command\":[\"/bin/bash\",\"-c\",\"/home/work/moonlight/bin/noah_control status\"]},\"failureThreshold\":30,\"periodSeconds\":5,\"successThreshold\":1,\"timeoutSeconds\":30},\"transferEnv\":[{\"envName\":\"EM_PRODUCT_LINE\",\"sourceContainerName\":\"main\"},{\"envName\":\"EM_APP\",\"sourceContainerName\":\"main\"},{\"envName\":\"EM_PLATFORM\",\"sourceContainerName\":\"main\"},{\"envName\":\"EM_LOGIC_IDC\",\"sourceContainerName\":\"main\"},{\"envName\":\"EM_ENV_TYPE\",\"sourceContainerName\":\"main\"},{\"envName\":\"EM_PAAS_TYPE\",\"sourceContainerName\":\"main\"},{\"envName\":\"EM_IP\",\"sourceContainerName\":\"main\"},{\"envName\":\"HOST_ADDRESS\",\"sourceContainerName\":\"main\"},{\"envName\":\"EM_INSTANCE_ID\",\"sourceContainerName\":\"main\"},{\"envName\":\"EM_PORT\",\"sourceContainerName\":\"main\"},{\"envName\":\"EM_APP_TYPE\",\"sourceContainerName\":\"main\"}]}],\"selector\":{\"matchLabels\":{\"em_env_type\":\"OFFLINE\",\"em_sidecar_moonlight_enabled\":\"true\"}},\"updateStrategy\":{\"type\":\"RollingUpdate\"}}}","app.oam.dev/last-applied-time":"2022-11-10T10:23:08Z","jarvis/em_sidecar":"moonlight","jarvis/em_sidecar_version":"2022.11.09.5","kruise.io/sidecarset-hash":"bcz4v4v7v96x9c7c458bdx956v4x6wwc2c454744xb9d9bwb6899w7c4bc6ww545","kruise.io/sidecarset-hash-without-image":"47842595z9884f274944x5zz4w6xzx975wvcw4c5b54dvxzf296dw5xdzf4486b2","oam.dev/kubevela-version":"v1.3.6"},"creationTimestamp":"2022-11-15T08:26:14Z","generation":20,"labels":{"app.oam.dev/app-revision-hash":"59ff51a33080fb57","app.oam.dev/appRevision":"moonlight-offline-v7","app.oam.dev/cluster":"ni-yq02-test","app.oam.dev/component":"moonlight-offline","app.oam.dev/name":"moonlight-offline","app.oam.dev/namespace":"jarvis-system","app.oam.dev/resourceType":"WORKLOAD","app.oam.dev/revision":"moonlight-offline-v7","apps.kruise.io/sidecarset-custom-version":"2022.11.09.5","oam.dev/render-hash":"571c3f32b288c1e5","workload.oam.dev/type":"jarvis-sidecar-component"},"name":"moonlight-offline","resourceVersion":"20544757","selfLink":"/apis/apps.kruise.io/v1alpha1/sidecarsets/moonlight-offline","uid":"eb21bcea-008c-4ac4-804c-543eab57c893"},"spec":{"containers":[{"image":"iregistry.baidu-int.com/jarvis-sidecar/moonlight:2022.11.09.5","imagePullPolicy":"IfNotPresent","lifecycle":{"postStart":{"exec":{"command":["/bin/bash","-c","/home/work/moonlight/bin/wait_ready"]}}},"livenessProbe":{"exec":{"command":["/bin/bash","-c","/home/work/moonlight/bin/noah_control status"]},"failureThreshold":3,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":30},"name":"moonlight","podInjectPolicy":"BeforeAppContainer","readinessProbe":{"exec":{"command":["/bin/bash","-c","/home/work/moonlight/bin/noah_control status"]},"failureThreshold":3,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":30},"resources":{"limits":{"cpu":"1","eks.baidu-int.com/cpu":"1","ephemeral-storage":"2Gi","memory":"200Mi"},"requests":{"cpu":"1","eks.baidu-int.com/cpu":"1","ephemeral-storage":"2Gi","memory":"200Mi"}},"shareVolumePolicy":{"type":"enabled"},"startupProbe":{"exec":{"command":["/bin/bash","-c","/home/work/moonlight/bin/noah_control status"]},"failureThreshold":30,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":30},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","transferEnv":[{"envName":"EM_PRODUCT_LINE","sourceContainerName":"main"},{"envName":"EM_APP","sourceContainerName":"main"},{"envName":"EM_PLATFORM","sourceContainerName":"main"},{"envName":"EM_LOGIC_IDC","sourceContainerName":"main"},{"envName":"EM_ENV_TYPE","sourceContainerName":"main"},{"envName":"EM_PAAS_TYPE","sourceContainerName":"main"},{"envName":"EM_IP","sourceContainerName":"main"},{"envName":"HOST_ADDRESS","sourceContainerName":"main"},{"envName":"EM_INSTANCE_ID","sourceContainerName":"main"},{"envName":"EM_PORT","sourceContainerName":"main"},{"envName":"EM_APP_TYPE","sourceContainerName":"main"}],"upgradeStrategy":{"upgradeType":"ColdUpgrade"}}],"injectionStrategy":{"revision":{"customVersion":"2022.11.09.6","policy":"Always"}},"revisionHistoryLimit":2,"selector":{"matchLabels":{"em_env_type":"OFFLINE","em_sidecar_moonlight_enabled":"true"}},"updateStrategy":{"maxUnavailable":10,"partition":0,"type":"RollingUpdate"}},"status":{"collisionCount":0,"latestRevision":"moonlight-offline-69cf956f8f","matchedPods":10,"observedGeneration":20,"readyPods":10,"updatedPods":10,"updatedReadyPods":10}}
+    oam.dev/kubevela-version: v1.3.6
+  creationTimestamp: "2022-11-22T12:23:22Z"
+  labels:
+    app.oam.dev/app-revision-hash: 59ff51a33080fb57
+    app.oam.dev/appRevision: moonlight-offline-v7
+    app.oam.dev/cluster: ni-yq02-test
+    app.oam.dev/component: moonlight-offline
+    app.oam.dev/name: moonlight-offline
+    app.oam.dev/namespace: jarvis-system
+    app.oam.dev/resourceType: WORKLOAD
+    app.oam.dev/revision: moonlight-offline-v7
+    apps.kruise.io/sidecarset-custom-version: 2022.11.09.5
+    controller.kubernetes.io/hash: 65485d567c
+    kruise.io/sidecarset-name: moonlight-offline
+    oam.dev/render-hash: 571c3f32b288c1e5
+    workload.oam.dev/type: jarvis-sidecar-component
+  name: moonlight-offline-65485d567c
+  namespace: kruise-system
+  ownerReferences:
+  - apiVersion: apps.kruise.io/v1alpha1
+    blockOwnerDeletion: true
+    controller: true
+    kind: SidecarSet
+    name: moonlight-offline
+    uid: eb21bcea-008c-4ac4-804c-543eab57c893
+  resourceVersion: "20545258"
+  selfLink: /apis/apps/v1/namespaces/kruise-system/controllerrevisions/moonlight-offline-65485d567c
+  uid: b7aba154-1823-40f2-9c21-2fc09b247600
+revision: 17
